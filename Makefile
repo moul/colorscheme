@@ -1,6 +1,6 @@
 all: .tmp/tools
 	cat ManfredTouron.itermcolors | ./.tmp/tools/iterm2xrdb > ManfredTouron.xrdb
-	./.tmp/tools/xrdb2hterm ./ManfredTouron.xrdb > ManfredTouron.hterm.js
+	./.tmp/tools/xrdb2hterm ./ManfredTouron.xrdb | sed s/term_/t/ > ManfredTouron.hterm.js
 	python3 ./.tmp/tools/xrdb2Xresources.py . > ManfredTouron.Xresources
 	python3 ./.tmp/tools/xrdb2kitty.py . > ManfredTouron.kitty
 	python3 ./.tmp/tools/xrdb2vscode.py . > ManfredTouron.vscode
