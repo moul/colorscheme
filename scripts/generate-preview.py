@@ -229,9 +229,9 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     lines = ansi_text.split('\n')
     
     # Image settings
-    font_size = 12
-    line_height = font_size + 4
-    char_width = 8
+    font_size = 14
+    line_height = font_size + 6
+    char_width = 8  # Will be calculated from actual font
     padding = 20
     
     # Use theme colors if provided
@@ -294,10 +294,14 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     # Try to use a monospace font
     try:
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", font_size)
-        title_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16)
+        title_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
+        # Calculate actual character width
+        char_bbox = font.getbbox('X')
+        char_width = char_bbox[2] - char_bbox[0]
     except:
         font = ImageFont.load_default()
         title_font = font
+        char_width = 8
     
     # Draw title
     draw.text((padding, padding), title, fill=fg_color, font=title_font)
@@ -387,18 +391,21 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
             else:
                 # Draw text with current colors
                 if part:
-                    # Calculate text width for background
-                    text_bbox = draw.textbbox((0, 0), part, font=font)
+                    # Calculate text width for background - use actual font metrics
+                    text_bbox = font.getbbox(part)
                     text_width = text_bbox[2] - text_bbox[0]
-                    text_height = text_bbox[3] - text_bbox[1]
+                    text_height = font_size
                     
-                    # Draw background rectangle if different from default
+                    # For spaces and color blocks, make sure we draw the background
                     if current_bg != bg_color:
+                        # Draw background rectangle for the entire text area
                         draw.rectangle([x_offset, y_offset, x_offset + text_width, y_offset + text_height], fill=current_bg)
                     
-                    draw.text((x_offset, y_offset), part, fill=current_fg, font=font)
+                    # Only draw text if it's not just spaces (or draw it for contrast)
+                    if part.strip() or current_bg != bg_color:
+                        draw.text((x_offset, y_offset), part, fill=current_fg, font=font)
                     
-                    # Move x offset
+                    # Move x offset by the actual text width
                     x_offset += text_width
         
         y_offset += line_height
