@@ -54,12 +54,6 @@ A Nix-based terminal color scheme with dark and light variants
 ```bash
 # Generate all theme files in current directory
 nix run github:moul/colorscheme
-
-# Apply dark theme to current terminal
-nix run github:moul/colorscheme#apply-dark
-
-# Apply light theme to current terminal
-nix run github:moul/colorscheme#apply-light
 ```
 
 ### Using in Nix Configuration

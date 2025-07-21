@@ -68,60 +68,6 @@
           echo "✅ All theme files generated successfully!"
         '';
         
-        # Apply theme scripts
-        applyDarkTheme = pkgs.writeShellScriptBin "apply-dark-theme" ''
-          # Apply ManfredTouron dark theme using OSC sequences
-          printf '\033]10;${colorscheme.colors.dark.foreground}\033\\'
-          printf '\033]11;${colorscheme.colors.dark.background}\033\\'
-          printf '\033]12;${colorscheme.colors.dark.cursor}\033\\'
-          
-          # Set ANSI colors
-          printf '\033]4;0;${colorscheme.colors.dark.black}\033\\'
-          printf '\033]4;1;${colorscheme.colors.dark.red}\033\\'
-          printf '\033]4;2;${colorscheme.colors.dark.green}\033\\'
-          printf '\033]4;3;${colorscheme.colors.dark.yellow}\033\\'
-          printf '\033]4;4;${colorscheme.colors.dark.blue}\033\\'
-          printf '\033]4;5;${colorscheme.colors.dark.magenta}\033\\'
-          printf '\033]4;6;${colorscheme.colors.dark.cyan}\033\\'
-          printf '\033]4;7;${colorscheme.colors.dark.white}\033\\'
-          printf '\033]4;8;${colorscheme.colors.dark.brightBlack}\033\\'
-          printf '\033]4;9;${colorscheme.colors.dark.brightRed}\033\\'
-          printf '\033]4;10;${colorscheme.colors.dark.brightGreen}\033\\'
-          printf '\033]4;11;${colorscheme.colors.dark.brightYellow}\033\\'
-          printf '\033]4;12;${colorscheme.colors.dark.brightBlue}\033\\'
-          printf '\033]4;13;${colorscheme.colors.dark.brightMagenta}\033\\'
-          printf '\033]4;14;${colorscheme.colors.dark.brightCyan}\033\\'
-          printf '\033]4;15;${colorscheme.colors.dark.brightWhite}\033\\'
-          
-          echo "🎨 Applied ManfredTouron dark theme"
-        '';
-        
-        applyLightTheme = pkgs.writeShellScriptBin "apply-light-theme" ''
-          # Apply ManfredTouron light theme using OSC sequences
-          printf '\033]10;${colorscheme.colors.light.foreground}\033\\'
-          printf '\033]11;${colorscheme.colors.light.background}\033\\'
-          printf '\033]12;${colorscheme.colors.light.cursor}\033\\'
-          
-          # Set ANSI colors
-          printf '\033]4;0;${colorscheme.colors.light.black}\033\\'
-          printf '\033]4;1;${colorscheme.colors.light.red}\033\\'
-          printf '\033]4;2;${colorscheme.colors.light.green}\033\\'
-          printf '\033]4;3;${colorscheme.colors.light.yellow}\033\\'
-          printf '\033]4;4;${colorscheme.colors.light.blue}\033\\'
-          printf '\033]4;5;${colorscheme.colors.light.magenta}\033\\'
-          printf '\033]4;6;${colorscheme.colors.light.cyan}\033\\'
-          printf '\033]4;7;${colorscheme.colors.light.white}\033\\'
-          printf '\033]4;8;${colorscheme.colors.light.brightBlack}\033\\'
-          printf '\033]4;9;${colorscheme.colors.light.brightRed}\033\\'
-          printf '\033]4;10;${colorscheme.colors.light.brightGreen}\033\\'
-          printf '\033]4;11;${colorscheme.colors.light.brightYellow}\033\\'
-          printf '\033]4;12;${colorscheme.colors.light.brightBlue}\033\\'
-          printf '\033]4;13;${colorscheme.colors.light.brightMagenta}\033\\'
-          printf '\033]4;14;${colorscheme.colors.light.brightCyan}\033\\'
-          printf '\033]4;15;${colorscheme.colors.light.brightWhite}\033\\'
-          
-          echo "🎨 Applied ManfredTouron light theme"
-        '';
         
       in
       {
@@ -135,8 +81,6 @@
         packages = {
           default = buildScript;
           build-themes = buildScript;
-          apply-dark-theme = applyDarkTheme;
-          apply-light-theme = applyLightTheme;
         };
         
         # Apps for direct execution
@@ -149,16 +93,6 @@
           build = {
             type = "app";
             program = "${buildScript}/bin/build-themes";
-          };
-          
-          apply-dark = {
-            type = "app";
-            program = "${applyDarkTheme}/bin/apply-dark-theme";
-          };
-          
-          apply-light = {
-            type = "app";
-            program = "${applyLightTheme}/bin/apply-light-theme";
           };
         };
         
@@ -178,9 +112,7 @@
               pillow
             ]))
             
-            # Theme application scripts
-            applyDarkTheme
-            applyLightTheme
+            # Build script
             buildScript
             
             # Font for better image rendering
@@ -190,15 +122,9 @@
           shellHook = ''
             echo "🎨 ManfredTouron colorscheme - Nix-based development environment"
             echo ""
-            echo "Theme commands:"
+            echo "Commands:"
             echo "  nix run        - Generate all theme files"
-            echo "  nix run .#apply-dark   - Apply dark theme to terminal"
-            echo "  nix run .#apply-light  - Apply light theme to terminal"
-            echo ""
-            echo "Development commands:"
-            echo "  build-themes   - Generate all theme files"
-            echo "  apply-dark-theme   - Apply dark theme"
-            echo "  apply-light-theme  - Apply light theme"
+            echo "  build-themes   - Generate all theme files (in dev shell)"
             echo ""
             echo "Use the color scheme in your Nix config:"
             echo '  colorscheme = inputs.moul-colorscheme.lib.${system}.colorscheme;'
