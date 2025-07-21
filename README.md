@@ -31,7 +31,3 @@ Personal color scheme for my terminals etc
 | Dark Theme | Light Theme |
 |------------|-------------|
 | ![24-bit Color Test Dark](./assets/color-table-24bit-dark.png) | ![24-bit Color Test Light](./assets/color-table-24bit-light.png) |
-
-### Original Terminal Screenshot
-
-![Original Screenshot](./assets/term.jpg)
