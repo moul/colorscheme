@@ -223,6 +223,7 @@ def generate_color_table_previews(root_dir):
 def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     """Convert ANSI colored text to image"""
     from PIL import Image, ImageDraw, ImageFont
+    import re
     
     # Parse ANSI codes and create image
     lines = ansi_text.split('\n')
@@ -233,11 +234,6 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     char_width = 8
     padding = 20
     
-    # Calculate dimensions
-    max_line_length = max(len(line.encode('utf-8')) for line in lines if line.strip()) if lines else 80
-    width = min(max_line_length * char_width + padding * 2, 1200)
-    height = len(lines) * line_height + padding * 2 + 40  # Extra space for title
-    
     # Use theme colors if provided
     bg_color = '#000000'
     fg_color = '#ffffff'
@@ -245,6 +241,38 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     if theme_colors:
         bg_color = theme_colors.get('Background_Color', '#000000')
         fg_color = theme_colors.get('Foreground_Color', '#ffffff')
+    
+    # Default ANSI color palette - will be overridden by theme if available
+    ansi_colors = {
+        0: '#000000',   # black
+        1: '#ff0000',   # red
+        2: '#00ff00',   # green
+        3: '#ffff00',   # yellow
+        4: '#0000ff',   # blue
+        5: '#ff00ff',   # magenta
+        6: '#00ffff',   # cyan
+        7: '#ffffff',   # white
+        8: '#808080',   # bright black
+        9: '#ff8080',   # bright red
+        10: '#80ff80',  # bright green
+        11: '#ffff80',  # bright yellow
+        12: '#8080ff',  # bright blue
+        13: '#ff80ff',  # bright magenta
+        14: '#80ffff',  # bright cyan
+        15: '#ffffff'   # bright white
+    }
+    
+    # Override with theme colors if available
+    if theme_colors:
+        for i in range(16):
+            color_key = f'Ansi_{i}_Color'
+            if color_key in theme_colors:
+                ansi_colors[i] = theme_colors[color_key]
+    
+    # Calculate dimensions
+    max_line_length = max(len(strip_ansi_codes(line)) for line in lines if line.strip()) if lines else 80
+    width = min(max_line_length * char_width + padding * 2, 1200)
+    height = len(lines) * line_height + padding * 2 + 40  # Extra space for title
     
     # Create image
     img = Image.new('RGB', (width, height), bg_color)
@@ -261,13 +289,54 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     # Draw title
     draw.text((padding, padding), title, fill=fg_color, font=title_font)
     
-    # Draw text lines (simplified ANSI parsing)
+    # Parse and render ANSI colored text
     y_offset = padding + 30
     for line in lines:
-        if line.strip():
-            # For now, draw without ANSI parsing - just the raw text
-            clean_line = strip_ansi_codes(line)
-            draw.text((padding, y_offset), clean_line, fill=fg_color, font=font)
+        if not line.strip():
+            y_offset += line_height
+            continue
+            
+        x_offset = padding
+        current_fg = fg_color
+        current_bg = bg_color
+        
+        # Simple ANSI parser
+        parts = re.split(r'(\033\[[0-9;]*m)', line)
+        
+        for part in parts:
+            if part.startswith('\033[') and part.endswith('m'):
+                # Parse ANSI escape sequence
+                codes = part[2:-1].split(';')
+                for code in codes:
+                    if code == '' or code == '0':
+                        current_fg = fg_color
+                        current_bg = bg_color
+                    elif code.isdigit():
+                        code_int = int(code)
+                        if 30 <= code_int <= 37:  # foreground colors
+                            current_fg = ansi_colors.get(code_int - 30, fg_color)
+                        elif 90 <= code_int <= 97:  # bright foreground colors
+                            current_fg = ansi_colors.get(code_int - 90 + 8, fg_color)
+                        elif 40 <= code_int <= 47:  # background colors
+                            current_bg = ansi_colors.get(code_int - 40, bg_color)
+                        elif 100 <= code_int <= 107:  # bright background colors
+                            current_bg = ansi_colors.get(code_int - 100 + 8, bg_color)
+                        elif code_int == 1:  # bold - make brighter
+                            pass  # For now, ignore bold
+            else:
+                # Draw text with current colors
+                if part:
+                    # Draw background rectangle if different from default
+                    if current_bg != bg_color:
+                        text_bbox = draw.textbbox((x_offset, y_offset), part, font=font)
+                        draw.rectangle([text_bbox[0], text_bbox[1], text_bbox[2], text_bbox[3]], fill=current_bg)
+                    
+                    draw.text((x_offset, y_offset), part, fill=current_fg, font=font)
+                    
+                    # Move x offset
+                    text_bbox = draw.textbbox((x_offset, y_offset), part, font=font)
+                    x_offset = text_bbox[2]
+        
         y_offset += line_height
     
     img.save(output_file)
