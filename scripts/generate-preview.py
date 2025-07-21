@@ -230,7 +230,7 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     
     # Image settings
     font_size = 14
-    line_height = font_size + 6
+    line_height = font_size + 2  # Much tighter line spacing like terminal
     char_width = 8  # Will be calculated from actual font
     padding = 20
     
@@ -285,7 +285,7 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
         max_line_length = 80
         
     width = min(max_line_length * char_width + padding * 2, 1400)
-    height = max(line_count * line_height + padding * 2 + 50, 300)  # Ensure minimum height
+    height = max(line_count * line_height + padding * 2 + 40, 200)  # Tighter overall height
     
     # Create image
     img = Image.new('RGB', (width, height), bg_color)
@@ -307,7 +307,7 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     draw.text((padding, padding), title, fill=fg_color, font=title_font)
     
     # Parse and render ANSI colored text
-    y_offset = padding + 40  # More space after title
+    y_offset = padding + 30  # Less space after title
     for line in lines:
         # Skip completely empty lines, but process lines with only ANSI codes
         clean_line = strip_ansi_codes(line)
