@@ -6,7 +6,7 @@ import os
 import json
 from pathlib import Path
 
-def convert_xrdb_to_vscode(directory, theme_name="ManfredTouron"):
+def convert_xrdb_to_vscode(directory, theme_name="moul"):
     """Convert xrdb files to VS Code terminal theme format"""
     
     # Find the specific xrdb file
@@ -85,5 +85,5 @@ if __name__ == '__main__':
         sys.exit(1)
     
     directory = sys.argv[1]
-    theme_name = sys.argv[2] if len(sys.argv) > 2 else "ManfredTouron"
+    theme_name = sys.argv[2] if len(sys.argv) > 2 else "moul"
     convert_xrdb_to_vscode(directory, theme_name)

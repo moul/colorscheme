@@ -70,7 +70,7 @@ nix run github:moul/colorscheme
     
     # Use generated theme files
     home.file.".config/kitty/theme.conf".source = 
-      colorscheme.lib.x86_64-linux.themes."ManfredTouron.kitty";
+      colorscheme.lib.x86_64-linux.themes."moul.kitty";
   };
 }
 ```
@@ -88,31 +88,31 @@ Then follow the terminal-specific instructions below.
 ### iTerm2 (macOS)
 ```bash
 # Download and import
-curl -O https://raw.githubusercontent.com/moul/colorscheme/main/ManfredTouron.itermcolors
-# Then: iTerm2 → Preferences → Profiles → Colors → Import → ManfredTouron.itermcolors
+curl -O https://raw.githubusercontent.com/moul/colorscheme/main/moul.itermcolors
+# Then: iTerm2 → Preferences → Profiles → Colors → Import → moul.itermcolors
 ```
 
 ### Kitty
 ```bash
 # Add to ~/.config/kitty/kitty.conf
-include ManfredTouron.kitty
+include moul.kitty
 ```
 
 ### VS Code
 ```bash
 # Copy theme file to VS Code extensions
-cp ManfredTouron.vscode ~/.vscode/extensions/
+cp moul.vscode ~/.vscode/extensions/
 ```
 
 ### Xterm/URxvt
 ```bash
 # Add to ~/.Xresources
-cat ManfredTouron.Xresources >> ~/.Xresources
+cat moul.Xresources >> ~/.Xresources
 xrdb ~/.Xresources
 ```
 
 ### Blink Shell (iOS/iPadOS)
 ```bash
-# Copy ManfredTouron-Dynamic.hterm.js content to Blink appearance settings
+# Copy moul-dynamic.hterm.js content to Blink appearance settings
 # Supports automatic light/dark switching
 ```

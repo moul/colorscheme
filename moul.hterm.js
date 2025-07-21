@@ -1,4 +1,4 @@
-// ManfredTouron dark theme for hterm
+// moul dark theme for hterm
 const terminalProfile = {
   cursor: '#eeeeee',
   foreground: '#eeeeee',

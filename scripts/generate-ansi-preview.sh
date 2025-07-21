@@ -115,19 +115,19 @@ main() {
     mkdir -p "$ROOT_DIR/assets"
     
     # Generate dark theme preview
-    if [ -f "$ROOT_DIR/ManfredTouron.xrdb" ]; then
+    if [ -f "$ROOT_DIR/moul.xrdb" ]; then
         generate_ansi_preview \
-            "$ROOT_DIR/ManfredTouron.xrdb" \
+            "$ROOT_DIR/moul.xrdb" \
             "$ROOT_DIR/assets/preview-dark.ansi" \
-            "ManfredTouron Dark Theme"
+            "moul Dark Theme"
     fi
     
     # Generate light theme preview
-    if [ -f "$ROOT_DIR/ManfredTouron-Light.xrdb" ]; then
+    if [ -f "$ROOT_DIR/moul-light.xrdb" ]; then
         generate_ansi_preview \
-            "$ROOT_DIR/ManfredTouron-Light.xrdb" \
+            "$ROOT_DIR/moul-light.xrdb" \
             "$ROOT_DIR/assets/preview-light.ansi" \
-            "ManfredTouron Light Theme"
+            "moul Light Theme"
     fi
     
     echo "ANSI previews generated successfully!"

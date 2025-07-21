@@ -1,5 +1,5 @@
 {
-  description = "ManfredTouron colorscheme - Nix-based terminal color scheme";
+  description = "moul colorscheme - Nix-based terminal color scheme";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -20,28 +20,28 @@
         
         # Generate all theme files
         generateTheme = variant: {
-          "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.itermcolors" = 
-            pkgs.writeText "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.itermcolors" 
+          "moul${lib.optionalString (variant == "light") "-light"}.itermcolors" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.itermcolors" 
             (generators.genIterm2 variant colorscheme.colors.${variant});
             
-          "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.kitty" = 
-            pkgs.writeText "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.kitty" 
+          "moul${lib.optionalString (variant == "light") "-light"}.kitty" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.kitty" 
             (generators.genKitty variant colorscheme.colors.${variant});
             
-          "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.Xresources" = 
-            pkgs.writeText "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.Xresources" 
+          "moul${lib.optionalString (variant == "light") "-light"}.Xresources" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.Xresources" 
             (generators.genXresources variant colorscheme.colors.${variant});
             
-          "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.xrdb" = 
-            pkgs.writeText "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.xrdb" 
+          "moul${lib.optionalString (variant == "light") "-light"}.xrdb" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.xrdb" 
             (generators.genXrdb variant colorscheme.colors.${variant});
             
-          "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.hterm.js" = 
-            pkgs.writeText "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.hterm.js" 
+          "moul${lib.optionalString (variant == "light") "-light"}.hterm.js" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.hterm.js" 
             (generators.genHterm variant colorscheme.colors.${variant});
             
-          "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.vscode" = 
-            pkgs.writeText "ManfredTouron${lib.optionalString (variant == "light") "-Light"}.vscode" 
+          "moul${lib.optionalString (variant == "light") "-light"}.vscode" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.vscode" 
             (generators.genVscode variant colorscheme.colors.${variant});
         };
         
@@ -49,7 +49,7 @@
         lightThemes = generateTheme "light";
         
         dynamicTheme = {
-          "ManfredTouron-Dynamic.hterm.js" = pkgs.writeText "ManfredTouron-Dynamic.hterm.js"
+          "moul-dynamic.hterm.js" = pkgs.writeText "moul-dynamic.hterm.js"
             (generators.genDynamicHterm colorscheme.colors.dark colorscheme.colors.light);
         };
         
@@ -57,7 +57,7 @@
         
         # Build script to generate all files
         buildScript = pkgs.writeShellScriptBin "build-themes" ''
-          echo "🎨 Generating ManfredTouron color schemes..."
+          echo "🎨 Generating moul color schemes..."
           
           ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: file: ''
             echo "  ✓ ${name}"
@@ -120,7 +120,7 @@
           ];
           
           shellHook = ''
-            echo "🎨 ManfredTouron colorscheme - Nix-based development environment"
+            echo "🎨 moul colorscheme - Nix-based development environment"
             echo ""
             echo "Commands:"
             echo "  nix run        - Generate all theme files"

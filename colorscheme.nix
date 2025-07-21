@@ -1,4 +1,4 @@
-# ManfredTouron Color Scheme Definition
+# moul Color Scheme Definition
 {
   # Color definitions
   colors = {

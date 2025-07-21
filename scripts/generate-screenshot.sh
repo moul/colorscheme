@@ -32,7 +32,7 @@ generate_color_blocks() {
     echo "Generating color blocks for $theme theme..."
     
     cat > "$output_file" << 'EOF'
-ManfredTouron Color Scheme
+moul Color Scheme
 ==========================
 
 Normal Colors:
@@ -95,9 +95,9 @@ generate_html_preview() {
     
     # Load colors from xrdb file
     if [ "$theme" == "light" ]; then
-        xrdb_file="$ROOT_DIR/ManfredTouron-Light.xrdb"
+        xrdb_file="$ROOT_DIR/moul-light.xrdb"
     else
-        xrdb_file="$ROOT_DIR/ManfredTouron.xrdb"
+        xrdb_file="$ROOT_DIR/moul.xrdb"
     fi
     
     # Extract colors
@@ -112,7 +112,7 @@ generate_html_preview() {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ManfredTouron $theme Theme</title>
+    <title>moul $theme Theme</title>
     <style>
         body {
             background: ${colors[Background_Color]};
@@ -141,7 +141,7 @@ generate_html_preview() {
     </style>
 </head>
 <body>
-    <h1>ManfredTouron $theme Theme</h1>
+    <h1>moul $theme Theme</h1>
     <div class="color-grid">
 EOF
     

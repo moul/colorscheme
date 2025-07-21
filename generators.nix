@@ -57,7 +57,7 @@ let
   
   # Generate Kitty config
   genKitty = variant: colors: ''
-    # ManfredTouron ${variant} theme for Kitty
+    # moul ${variant} theme for Kitty
     
     # Basic colors
     foreground ${colors.foreground}
@@ -104,7 +104,7 @@ let
   
   # Generate Xresources
   genXresources = variant: colors: ''
-    ! ManfredTouron ${variant} theme
+    ! moul ${variant} theme
     
     ! Basic colors
     *.foreground: ${colors.foreground}
@@ -146,7 +146,7 @@ let
   
   # Generate XRDB format
   genXrdb = variant: colors: ''
-    ! ManfredTouron ${variant} theme
+    ! moul ${variant} theme
     #define Ansi_0_Color ${colors.black}
     #define Ansi_1_Color ${colors.red}
     #define Ansi_2_Color ${colors.green}
@@ -171,7 +171,7 @@ let
   
   # Generate hterm JavaScript
   genHterm = variant: colors: ''
-    // ManfredTouron ${variant} theme for hterm
+    // moul ${variant} theme for hterm
     const terminalProfile = {
       cursor: '${colors.cursor}',
       foreground: '${colors.foreground}',
@@ -206,7 +206,7 @@ let
     theme = if variant == "dark" then "vs-dark" else "vs";
   in ''
     {
-      "name": "ManfredTouron ${variant}",
+      "name": "moul ${variant}",
       "type": "${if variant == "dark" then "dark" else "light"}",
       "colors": {
         "terminal.background": "${colors.background}",
@@ -235,7 +235,7 @@ let
   
   # Generate dynamic hterm theme
   genDynamicHterm = darkColors: lightColors: ''
-    // ManfredTouron Dynamic theme for hterm
+    // moul Dynamic theme for hterm
     // Automatically switches between light and dark based on system preference
     
     const darkScheme = {

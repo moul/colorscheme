@@ -1,4 +1,4 @@
-// ManfredTouron Dynamic theme for hterm
+// moul Dynamic theme for hterm
 // Automatically switches between light and dark based on system preference
 
 const darkScheme = {

@@ -12,7 +12,7 @@ build:
 
 clean:
 	rm -rf .tmp/ result result-* backup/
-	rm -f ManfredTouron*.xrdb ManfredTouron*.hterm.js ManfredTouron*.Xresources ManfredTouron*.kitty ManfredTouron*.vscode ManfredTouron*.itermcolors
+	rm -f moul*.xrdb moul*.hterm.js moul*.Xresources moul*.kitty moul*.vscode moul*.itermcolors
 
 screenshot: build
 	@nix develop --extra-experimental-features 'nix-command flakes' -c bash -c '\

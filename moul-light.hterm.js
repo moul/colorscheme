@@ -1,4 +1,4 @@
-// ManfredTouron light theme for hterm
+// moul light theme for hterm
 const terminalProfile = {
   cursor: '#191919',
   foreground: '#191919',
