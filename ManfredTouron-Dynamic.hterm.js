@@ -12,10 +12,10 @@ const darkScheme = {
 
 // Light theme configuration
 const lightScheme = {
-  cursor: 'rgba(26,26,26, 0.5)',
-  foreground: '#1a1a1a',
-  background: '#fafafa',
-  colors: ['#eeeeee', '#cc0000', '#33b30d', '#b38000', '#2640b3', '#a62680', '#4d8cd9', '#4d4d4d', '#b3b3b3', '#e60066', '#409933', '#bfb300', '#4d80cc', '#994db3', '#00a6cc', '#333333']
+  cursor: 'rgba(25,25,25, 0.5)',
+  foreground: '#191919',
+  background: '#f9f9f9',
+  colors: ['#eeeeee', '#cc0000', '#33b20c', '#b27f00', '#263fb2', '#a5267f', '#4c8cd8', '#4c4c4c', '#b2b2b2', '#e50066', '#3f9933', '#bfb200', '#4c7fcc', '#994cb2', '#00a5cc', '#333333']
 };
 
 // Function to apply theme
