@@ -300,42 +300,60 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
         current_fg = fg_color
         current_bg = bg_color
         
-        # Simple ANSI parser
-        parts = re.split(r'(\033\[[0-9;]*m)', line)
+        # Enhanced ANSI parser
+        # Split on any ANSI escape sequence, keeping the sequences
+        parts = re.split(r'(\033\[[0-9;]*[a-zA-Z])', line)
+        
+        bold = False
         
         for part in parts:
-            if part.startswith('\033[') and part.endswith('m'):
+            if part.startswith('\033['):
                 # Parse ANSI escape sequence
-                codes = part[2:-1].split(';')
-                for code in codes:
-                    if code == '' or code == '0':
-                        current_fg = fg_color
-                        current_bg = bg_color
-                    elif code.isdigit():
-                        code_int = int(code)
-                        if 30 <= code_int <= 37:  # foreground colors
-                            current_fg = ansi_colors.get(code_int - 30, fg_color)
-                        elif 90 <= code_int <= 97:  # bright foreground colors
-                            current_fg = ansi_colors.get(code_int - 90 + 8, fg_color)
-                        elif 40 <= code_int <= 47:  # background colors
-                            current_bg = ansi_colors.get(code_int - 40, bg_color)
-                        elif 100 <= code_int <= 107:  # bright background colors
-                            current_bg = ansi_colors.get(code_int - 100 + 8, bg_color)
-                        elif code_int == 1:  # bold - make brighter
-                            pass  # For now, ignore bold
+                if part.endswith('m'):
+                    codes_str = part[2:-1]  # Remove \033[ and m
+                    if codes_str == '':
+                        codes = ['0']
+                    else:
+                        codes = codes_str.split(';')
+                    
+                    for code in codes:
+                        if code == '' or code == '0':
+                            # Reset all
+                            current_fg = fg_color
+                            current_bg = bg_color
+                            bold = False
+                        elif code == '1':
+                            bold = True
+                        elif code.isdigit():
+                            code_int = int(code)
+                            if 30 <= code_int <= 37:  # foreground colors
+                                color_idx = code_int - 30
+                                if bold:
+                                    color_idx += 8  # Use bright version
+                                current_fg = ansi_colors.get(color_idx, fg_color)
+                            elif 40 <= code_int <= 47:  # background colors
+                                color_idx = code_int - 40
+                                current_bg = ansi_colors.get(color_idx, bg_color)
+                            elif 90 <= code_int <= 97:  # bright foreground colors
+                                current_fg = ansi_colors.get(code_int - 90 + 8, fg_color)
+                            elif 100 <= code_int <= 107:  # bright background colors
+                                current_bg = ansi_colors.get(code_int - 100 + 8, bg_color)
             else:
                 # Draw text with current colors
                 if part:
+                    # Calculate text width for background
+                    text_bbox = draw.textbbox((0, 0), part, font=font)
+                    text_width = text_bbox[2] - text_bbox[0]
+                    text_height = text_bbox[3] - text_bbox[1]
+                    
                     # Draw background rectangle if different from default
                     if current_bg != bg_color:
-                        text_bbox = draw.textbbox((x_offset, y_offset), part, font=font)
-                        draw.rectangle([text_bbox[0], text_bbox[1], text_bbox[2], text_bbox[3]], fill=current_bg)
+                        draw.rectangle([x_offset, y_offset, x_offset + text_width, y_offset + text_height], fill=current_bg)
                     
                     draw.text((x_offset, y_offset), part, fill=current_fg, font=font)
                     
                     # Move x offset
-                    text_bbox = draw.textbbox((x_offset, y_offset), part, font=font)
-                    x_offset = text_bbox[2]
+                    x_offset += text_width
         
         y_offset += line_height
     
