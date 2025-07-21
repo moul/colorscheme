@@ -31,3 +31,50 @@ Personal color scheme for my terminals etc
 | Dark Theme | Light Theme |
 |------------|-------------|
 | ![24-bit Color Test Dark](./assets/color-table-24bit-dark.png) | ![24-bit Color Test Light](./assets/color-table-24bit-light.png) |
+
+
+## Supported Formats
+
+| Format | File Extensions | Compatible Tools |
+|--------|-----------------|------------------|
+| **iTerm2** | `.itermcolors` | iTerm2, Terminal.app (import) |
+| **Kitty** | `.kitty` | Kitty terminal, Kitty-based terminals |  
+| **VS Code** | `.vscode` | Visual Studio Code, Code - OSS, VSCodium |
+| **Xresources** | `.Xresources` | Xterm, URxvt, st, most X11 terminals |
+| **XRDB** | `.xrdb` | Any terminal supporting X11 color database |
+| **Hterm** | `.hterm.js` | Chrome OS Terminal, Blink Shell, Secure Shell |
+| **Dynamic Hterm** | `-Dynamic.hterm.js` | Blink Shell with automatic theme switching |
+
+## Installation
+
+### iTerm2 (macOS)
+```bash
+# Download and import
+curl -O https://raw.githubusercontent.com/moul/colorscheme/main/ManfredTouron.itermcolors
+# Then: iTerm2 → Preferences → Profiles → Colors → Import → ManfredTouron.itermcolors
+```
+
+### Kitty
+```bash
+# Add to ~/.config/kitty/kitty.conf
+include ManfredTouron.kitty
+```
+
+### VS Code
+```bash
+# Copy theme file to VS Code extensions
+cp ManfredTouron.vscode ~/.vscode/extensions/
+```
+
+### Xterm/URxvt
+```bash
+# Add to ~/.Xresources
+cat ManfredTouron.Xresources >> ~/.Xresources
+xrdb ~/.Xresources
+```
+
+### Blink Shell (iOS/iPadOS)
+```bash
+# Copy ManfredTouron-Dynamic.hterm.js content to Blink appearance settings
+# Supports automatic light/dark switching
+```
