@@ -321,12 +321,15 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
         bold = False
         
         # Enhanced ANSI parser - split more carefully
-        # Handle both 'm' sequences and other escape sequences
-        parts = re.split(r'(\033\[[0-9;]*[a-zA-Z])', line)
+        # Handle CSI sequences (\033[...) and OSC sequences (\033]...)
+        parts = re.split(r'(\033(?:\][^\033]*(?:\033\\|\007)|\[[0-9;]*[a-zA-Z]))', line)
         
         for part in parts:
-            if part.startswith('\033['):
-                # Parse ANSI escape sequence
+            if part.startswith('\033]'):
+                # OSC (Operating System Command) sequence - ignore for rendering
+                continue
+            elif part.startswith('\033['):
+                # Parse ANSI CSI (Control Sequence Introducer) escape sequence
                 if part.endswith('m'):
                     codes_str = part[2:-1]  # Remove \033[ and m
                     if codes_str == '':
@@ -374,6 +377,20 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
                                         gray = min(255, 8 + (color_idx - 232) * 10)
                                         current_bg = f'#{gray:02x}{gray:02x}{gray:02x}'
                                 i += 2  # Skip the 5 and color index
+                            elif code_int == 48 and i + 4 < len(codes) and codes[i + 1] == '2':
+                                # 24-bit RGB background: 48;2;r;g;b
+                                r = int(codes[i + 2])
+                                g = int(codes[i + 3]) 
+                                b = int(codes[i + 4])
+                                current_bg = f'#{r:02x}{g:02x}{b:02x}'
+                                i += 4  # Skip the 2, r, g, b
+                            elif code_int == 38 and i + 4 < len(codes) and codes[i + 1] == '2':
+                                # 24-bit RGB foreground: 38;2;r;g;b
+                                r = int(codes[i + 2])
+                                g = int(codes[i + 3])
+                                b = int(codes[i + 4])
+                                current_fg = f'#{r:02x}{g:02x}{b:02x}'
+                                i += 4  # Skip the 2, r, g, b
                             elif 30 <= code_int <= 37:  # foreground colors
                                 color_idx = code_int - 30
                                 if bold:
@@ -415,7 +432,8 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
 def strip_ansi_codes(text):
     """Remove ANSI escape codes from text"""
     import re
-    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    # Remove both CSI sequences (\033[...) and OSC sequences (\033]...)
+    ansi_escape = re.compile(r'\x1B(?:\][^\x1B]*(?:\x1B\\|\x07)|\[[0-?]*[ -/]*[@-~])')
     return ansi_escape.sub('', text)
 
 def main():
