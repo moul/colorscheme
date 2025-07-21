@@ -1,5 +1,5 @@
 {
-  description = "ManfredTouron colorscheme development environment";
+  description = "moul colorscheme - Nix-based terminal color scheme";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -10,8 +10,93 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        lib = pkgs.lib;
+        
+        # Import color scheme definition
+        colorscheme = import ./colorscheme.nix;
+        
+        # Import generators
+        generators = import ./generators.nix { inherit lib pkgs colorscheme; };
+        
+        # Generate all theme files
+        generateTheme = variant: {
+          "moul${lib.optionalString (variant == "light") "-light"}.itermcolors" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.itermcolors" 
+            (generators.genIterm2 variant colorscheme.colors.${variant});
+            
+          "moul${lib.optionalString (variant == "light") "-light"}.kitty" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.kitty" 
+            (generators.genKitty variant colorscheme.colors.${variant});
+            
+          "moul${lib.optionalString (variant == "light") "-light"}.Xresources" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.Xresources" 
+            (generators.genXresources variant colorscheme.colors.${variant});
+            
+          "moul${lib.optionalString (variant == "light") "-light"}.xrdb" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.xrdb" 
+            (generators.genXrdb variant colorscheme.colors.${variant});
+            
+          "moul${lib.optionalString (variant == "light") "-light"}.hterm.js" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.hterm.js" 
+            (generators.genHterm variant colorscheme.colors.${variant});
+            
+          "moul${lib.optionalString (variant == "light") "-light"}.vscode" = 
+            pkgs.writeText "moul${lib.optionalString (variant == "light") "-light"}.vscode" 
+            (generators.genVscode variant colorscheme.colors.${variant});
+        };
+        
+        darkThemes = generateTheme "dark";
+        lightThemes = generateTheme "light";
+        
+        dynamicTheme = {
+          "moul-dynamic.hterm.js" = pkgs.writeText "moul-dynamic.hterm.js"
+            (generators.genDynamicHterm colorscheme.colors.dark colorscheme.colors.light);
+        };
+        
+        allThemes = darkThemes // lightThemes // dynamicTheme;
+        
+        # Build script to generate all files
+        buildScript = pkgs.writeShellScriptBin "build-themes" ''
+          echo "🎨 Generating moul color schemes..."
+          
+          ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: file: ''
+            echo "  ✓ ${name}"
+            cp ${file} ${name}
+          '') allThemes)}
+          
+          echo ""
+          echo "✅ All theme files generated successfully!"
+        '';
+        
+        
       in
       {
+        # Export the color scheme for use in other Nix expressions
+        lib = {
+          inherit colorscheme generators;
+          themes = allThemes;
+        };
+        
+        # Packages
+        packages = {
+          default = buildScript;
+          build-themes = buildScript;
+        };
+        
+        # Apps for direct execution
+        apps = {
+          default = {
+            type = "app";
+            program = "${buildScript}/bin/build-themes";
+          };
+          
+          build = {
+            type = "app";
+            program = "${buildScript}/bin/build-themes";
+          };
+        };
+        
+        # Development shell
         devShells.default = pkgs.mkShell {
           name = "colorscheme-dev-shell";
           
@@ -27,32 +112,22 @@
               pillow
             ]))
             
-            # Optional screenshot tools
-            asciinema
+            # Build script
+            buildScript
             
             # Font for better image rendering
             dejavu_fonts
           ];
           
           shellHook = ''
-            echo "🎨 ManfredTouron colorscheme development environment (flake)"
-            echo "Available commands:"
-            echo "  make all        - Generate all theme formats"
-            echo "  make screenshot - Generate previews (with PNG support)"
-            echo "  make clean      - Clean generated files"
+            echo "🎨 moul colorscheme - Nix-based development environment"
             echo ""
-            echo "Dependencies loaded:"
-            echo "  ✓ Python $(python3 --version | cut -d' ' -f2) with Pillow"
-            echo "  ✓ Git $(git --version | cut -d' ' -f3)"
-            echo "  ✓ GNU Make $(make --version | head -1 | cut -d' ' -f3)"
-            
-            # Verify Pillow is available
-            if python3 -c "import PIL; print('  ✓ Pillow', PIL.__version__)" 2>/dev/null; then
-              echo "  ✓ Image generation ready"
-            else
-              echo "  ✗ Pillow not available"
-            fi
-            
+            echo "Commands:"
+            echo "  nix run        - Generate all theme files"
+            echo "  build-themes   - Generate all theme files (in dev shell)"
+            echo ""
+            echo "Use the color scheme in your Nix config:"
+            echo '  colorscheme = inputs.moul-colorscheme.lib.${system}.colorscheme;'
             echo ""
           '';
         };

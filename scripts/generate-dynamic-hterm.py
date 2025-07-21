@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate ManfredTouron-Dynamic.hterm.js from dark and light hterm files"""
+"""Generate moul-dynamic.hterm.js from dark and light hterm files"""
 
 import re
 import os
@@ -33,9 +33,9 @@ def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.dirname(script_dir)
     
-    dark_file = os.path.join(root_dir, 'ManfredTouron.hterm.js')
-    light_file = os.path.join(root_dir, 'ManfredTouron-Light.hterm.js')
-    output_file = os.path.join(root_dir, 'ManfredTouron-Dynamic.hterm.js')
+    dark_file = os.path.join(root_dir, 'moul.hterm.js')
+    light_file = os.path.join(root_dir, 'moul-light.hterm.js')
+    output_file = os.path.join(root_dir, 'moul-dynamic.hterm.js')
     
     try:
         with open(dark_file, 'r') as f:
@@ -47,9 +47,9 @@ def main():
         light_colors = extract_colors(light_content)
         
         # Generate the dynamic theme file
-        dynamic_content = f"""// ManfredTouron Dynamic Theme for hterm/Blink Shell
+        dynamic_content = f"""// moul Dynamic Theme for hterm/Blink Shell
 // Automatically switches between light and dark themes based on system preferences
-// Generated from ManfredTouron.hterm.js and ManfredTouron-Light.hterm.js
+// Generated from moul.hterm.js and moul-light.hterm.js
 
 // Dark theme configuration
 const darkScheme = {{
@@ -92,7 +92,7 @@ if (window.matchMedia) {{
 }}
 
 // Optional: Add manual theme toggle function
-window.toggleManfredTouronTheme = function() {{
+window.toggleMoulTheme = function() {{
   const currentBackground = t.prefs_.get('background-color');
   if (currentBackground === darkScheme.background) {{
     applyTheme(lightScheme);

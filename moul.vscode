@@ -1,0 +1,26 @@
+{
+  "name": "moul dark",
+  "type": "dark",
+  "colors": {
+    "terminal.background": "#000000",
+    "terminal.foreground": "#eeeeee",
+    "terminal.ansiBlack": "#222222",
+    "terminal.ansiRed": "#ff0000",
+    "terminal.ansiGreen": "#51ff0f",
+    "terminal.ansiYellow": "#e7a800",
+    "terminal.ansiBlue": "#3950d7",
+    "terminal.ansiMagenta": "#d336b1",
+    "terminal.ansiCyan": "#66b2ff",
+    "terminal.ansiWhite": "#cecece",
+    "terminal.ansiBrightBlack": "#4e4e4e",
+    "terminal.ansiBrightRed": "#ff008b",
+    "terminal.ansiBrightGreen": "#62c750",
+    "terminal.ansiBrightYellow": "#f4ff00",
+    "terminal.ansiBrightBlue": "#70a5ed",
+    "terminal.ansiBrightMagenta": "#b867e6",
+    "terminal.ansiBrightCyan": "#00d4fc",
+    "terminal.ansiBrightWhite": "#ffffff",
+    "terminalCursor.background": "#000000",
+    "terminalCursor.foreground": "#eeeeee"
+  }
+}

@@ -23,7 +23,7 @@ pkgs.mkShell {
   ];
   
   shellHook = ''
-    echo "🎨 ManfredTouron colorscheme development environment"
+    echo "🎨 moul colorscheme development environment"
     echo "Available commands:"
     echo "  make all        - Generate all theme formats"
     echo "  make screenshot - Generate previews (with PNG support)"

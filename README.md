@@ -1,11 +1,13 @@
 # moul/colorscheme
-Personal color scheme for my terminals etc
+A Nix-based terminal color scheme with dark and light variants
 
 ## Features
 
+- **Nix-based** - All colors and logic defined in Nix for reproducibility
 - **Dark and Light variants** - Optimized for different lighting conditions
 - **Dynamic theme switching** - Automatically switch based on system preferences or time
 - **Wide terminal support** - iTerm2, Kitty, VS Code, Xresources, Blink, and more
+- **Single source of truth** - Generate all formats from one color definition
 
 ## Screenshots
 
@@ -45,36 +47,72 @@ Personal color scheme for my terminals etc
 | **Hterm** | `.hterm.js` | Chrome OS Terminal, Blink Shell, Secure Shell |
 | **Dynamic Hterm** | `-Dynamic.hterm.js` | Blink Shell with automatic theme switching |
 
-## Installation
+## Usage
+
+### Quick Start (Nix)
+
+```bash
+# Generate all theme files in current directory
+nix run github:moul/colorscheme
+```
+
+### Using in Nix Configuration
+
+```nix
+{
+  inputs = {
+    colorscheme.url = "github:moul/colorscheme";
+  };
+
+  outputs = { self, colorscheme, ... }: {
+    # Access color definitions
+    myColors = colorscheme.lib.x86_64-linux.colorscheme.colors.dark;
+    
+    # Use generated theme files
+    home.file.".config/kitty/theme.conf".source = 
+      colorscheme.lib.x86_64-linux.themes."moul.kitty";
+  };
+}
+```
+
+### Manual Installation
+
+First generate the theme files:
+
+```bash
+nix run github:moul/colorscheme
+```
+
+Then follow the terminal-specific instructions below.
 
 ### iTerm2 (macOS)
 ```bash
 # Download and import
-curl -O https://raw.githubusercontent.com/moul/colorscheme/main/ManfredTouron.itermcolors
-# Then: iTerm2 → Preferences → Profiles → Colors → Import → ManfredTouron.itermcolors
+curl -O https://raw.githubusercontent.com/moul/colorscheme/main/moul.itermcolors
+# Then: iTerm2 → Preferences → Profiles → Colors → Import → moul.itermcolors
 ```
 
 ### Kitty
 ```bash
 # Add to ~/.config/kitty/kitty.conf
-include ManfredTouron.kitty
+include moul.kitty
 ```
 
 ### VS Code
 ```bash
 # Copy theme file to VS Code extensions
-cp ManfredTouron.vscode ~/.vscode/extensions/
+cp moul.vscode ~/.vscode/extensions/
 ```
 
 ### Xterm/URxvt
 ```bash
 # Add to ~/.Xresources
-cat ManfredTouron.Xresources >> ~/.Xresources
+cat moul.Xresources >> ~/.Xresources
 xrdb ~/.Xresources
 ```
 
 ### Blink Shell (iOS/iPadOS)
 ```bash
-# Copy ManfredTouron-Dynamic.hterm.js content to Blink appearance settings
+# Copy moul-dynamic.hterm.js content to Blink appearance settings
 # Supports automatic light/dark switching
 ```

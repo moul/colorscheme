@@ -3,7 +3,7 @@
 
 # Function to show color palette
 show_palette() {
-    echo -e "\n\033[1mManfredTouron Color Scheme\033[0m"
+    echo -e "\n\033[1mmoul Color Scheme\033[0m"
     echo -e "=========================="
     
     # Show basic 16 colors

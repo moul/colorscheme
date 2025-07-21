@@ -1,3 +1,4 @@
+! moul light theme
 #define Ansi_0_Color #eeeeee
 #define Ansi_1_Color #cc0000
 #define Ansi_2_Color #33b20c
@@ -17,7 +18,4 @@
 #define Background_Color #f9f9f9
 #define Foreground_Color #191919
 #define Cursor_Color #191919
-#define Cursor_Text_Color #f9f9f9
-#define Bold_Color #191919
 #define Selection_Color #d8d8d8
-#define Selected_Text_Color #191919

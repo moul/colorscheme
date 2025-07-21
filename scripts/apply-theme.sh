@@ -1,5 +1,5 @@
 #!/bin/bash
-# Apply ManfredTouron color scheme using escape sequences
+# Apply moul color scheme using escape sequences
 # Works with terminals that support OSC escape sequences
 
 set -euo pipefail
@@ -12,9 +12,9 @@ THEME="${1:-dark}"
 
 # Load the appropriate xrdb file
 if [ "$THEME" == "light" ]; then
-    XRDB_FILE="$THEME_DIR/ManfredTouron-Light.xrdb"
+    XRDB_FILE="$THEME_DIR/moul-light.xrdb"
 else
-    XRDB_FILE="$THEME_DIR/ManfredTouron.xrdb"
+    XRDB_FILE="$THEME_DIR/moul.xrdb"
 fi
 
 if [ ! -f "$XRDB_FILE" ]; then

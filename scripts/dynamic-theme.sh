@@ -1,5 +1,5 @@
 #!/bin/bash
-# Dynamic theme switcher for ManfredTouron color scheme
+# Dynamic theme switcher for moul color scheme
 # Switches between light and dark themes based on system preferences or time
 
 # Function to detect macOS dark mode
@@ -77,9 +77,9 @@ apply_theme() {
     # For iTerm2
     if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
         if [ "$theme" == "light" ]; then
-            echo -e "\033]50;SetProfile=ManfredTouron-Light\a"
+            echo -e "\033]50;SetProfile=moul-light\a"
         else
-            echo -e "\033]50;SetProfile=ManfredTouron\a"
+            echo -e "\033]50;SetProfile=moul\a"
         fi
     fi
     

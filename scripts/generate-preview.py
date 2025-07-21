@@ -18,7 +18,7 @@ def parse_xrdb(filename):
                     colors[color_name] = color_value
     return colors
 
-def generate_preview(colors, output_file, title="ManfredTouron Color Scheme"):
+def generate_preview(colors, output_file, title="moul Color Scheme"):
     """Generate a preview image of the color scheme"""
     # Image settings
     width = 800
@@ -142,8 +142,8 @@ def generate_color_table_previews(root_dir):
     
     # Generate for both dark and light themes
     themes = [
-        ('ManfredTouron.xrdb', 'dark'),
-        ('ManfredTouron-Light.xrdb', 'light')
+        ('moul.xrdb', 'dark'),
+        ('moul-light.xrdb', 'light')
     ]
     
     for script_name, output_base, title in scripts:
@@ -448,19 +448,19 @@ def main():
         sys.exit(1)
     
     # Generate dark theme preview
-    dark_xrdb = os.path.join(root_dir, 'ManfredTouron.xrdb')
+    dark_xrdb = os.path.join(root_dir, 'moul.xrdb')
     if os.path.exists(dark_xrdb):
         colors = parse_xrdb(dark_xrdb)
         output_file = os.path.join(root_dir, 'assets', 'preview-dark.png')
         os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        generate_preview(colors, output_file, "ManfredTouron Dark Theme")
+        generate_preview(colors, output_file, "moul Dark Theme")
     
     # Generate light theme preview
-    light_xrdb = os.path.join(root_dir, 'ManfredTouron-Light.xrdb')
+    light_xrdb = os.path.join(root_dir, 'moul-light.xrdb')
     if os.path.exists(light_xrdb):
         colors = parse_xrdb(light_xrdb)
         output_file = os.path.join(root_dir, 'assets', 'preview-light.png')
-        generate_preview(colors, output_file, "ManfredTouron Light Theme")
+        generate_preview(colors, output_file, "moul Light Theme")
     
     # Generate color table previews using the contrib scripts
     generate_color_table_previews(root_dir)
