@@ -411,12 +411,12 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
                     # Calculate text width for background - use actual font metrics
                     text_bbox = font.getbbox(part)
                     text_width = text_bbox[2] - text_bbox[0]
-                    text_height = font_size
                     
                     # For spaces and color blocks, make sure we draw the background
+                    # Use full line height for background, not just text height
                     if current_bg != bg_color:
-                        # Draw background rectangle for the entire text area
-                        draw.rectangle([x_offset, y_offset, x_offset + text_width, y_offset + text_height], fill=current_bg)
+                        # Draw background rectangle for the entire line height
+                        draw.rectangle([x_offset, y_offset, x_offset + text_width, y_offset + line_height], fill=current_bg)
                     
                     # Only draw text if it's not just spaces (or draw it for contrast)
                     if part.strip() or current_bg != bg_color:
