@@ -269,10 +269,23 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
             if color_key in theme_colors:
                 ansi_colors[i] = theme_colors[color_key]
     
-    # Calculate dimensions
-    max_line_length = max(len(strip_ansi_codes(line)) for line in lines if line.strip()) if lines else 80
-    width = min(max_line_length * char_width + padding * 2, 1200)
-    height = len(lines) * line_height + padding * 2 + 40  # Extra space for title
+    # Calculate dimensions more carefully
+    # Count actual printable lines (non-empty after stripping ANSI)
+    printable_lines = [line for line in lines if strip_ansi_codes(line).strip()]
+    line_count = len(printable_lines) if printable_lines else len(lines)
+    
+    # Calculate max width by checking each line
+    max_line_length = 0
+    for line in lines:
+        clean_line = strip_ansi_codes(line)
+        if len(clean_line) > max_line_length:
+            max_line_length = len(clean_line)
+    
+    if max_line_length == 0:
+        max_line_length = 80
+        
+    width = min(max_line_length * char_width + padding * 2, 1400)
+    height = max(line_count * line_height + padding * 2 + 50, 300)  # Ensure minimum height
     
     # Create image
     img = Image.new('RGB', (width, height), bg_color)
@@ -290,21 +303,22 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
     draw.text((padding, padding), title, fill=fg_color, font=title_font)
     
     # Parse and render ANSI colored text
-    y_offset = padding + 30
+    y_offset = padding + 40  # More space after title
     for line in lines:
-        if not line.strip():
+        # Skip completely empty lines, but process lines with only ANSI codes
+        clean_line = strip_ansi_codes(line)
+        if not clean_line and not line.strip():
             y_offset += line_height
             continue
             
         x_offset = padding
         current_fg = fg_color
         current_bg = bg_color
-        
-        # Enhanced ANSI parser
-        # Split on any ANSI escape sequence, keeping the sequences
-        parts = re.split(r'(\033\[[0-9;]*[a-zA-Z])', line)
-        
         bold = False
+        
+        # Enhanced ANSI parser - split more carefully
+        # Handle both 'm' sequences and other escape sequences
+        parts = re.split(r'(\033\[[0-9;]*[a-zA-Z])', line)
         
         for part in parts:
             if part.startswith('\033['):
@@ -316,7 +330,9 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
                     else:
                         codes = codes_str.split(';')
                     
-                    for code in codes:
+                    i = 0
+                    while i < len(codes):
+                        code = codes[i]
                         if code == '' or code == '0':
                             # Reset all
                             current_fg = fg_color
@@ -326,7 +342,35 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
                             bold = True
                         elif code.isdigit():
                             code_int = int(code)
-                            if 30 <= code_int <= 37:  # foreground colors
+                            if code_int == 38 and i + 2 < len(codes) and codes[i + 1] == '5':
+                                # 256-color foreground: 38;5;n
+                                color_idx = int(codes[i + 2])
+                                if color_idx < 16:
+                                    current_fg = ansi_colors.get(color_idx, fg_color)
+                                else:
+                                    # Use a default color for 256-color palette beyond 16
+                                    current_fg = fg_color
+                                i += 2  # Skip the 5 and color index
+                            elif code_int == 48 and i + 2 < len(codes) and codes[i + 1] == '5':
+                                # 256-color background: 48;5;n
+                                color_idx = int(codes[i + 2])
+                                if color_idx < 16:
+                                    current_bg = ansi_colors.get(color_idx, bg_color)
+                                else:
+                                    # Generate colors for 256-color palette beyond 16
+                                    if color_idx < 232:
+                                        # 6x6x6 color cube (216 colors)
+                                        color_idx -= 16
+                                        r = (color_idx // 36) * 51
+                                        g = ((color_idx % 36) // 6) * 51  
+                                        b = (color_idx % 6) * 51
+                                        current_bg = f'#{r:02x}{g:02x}{b:02x}'
+                                    else:
+                                        # Grayscale (24 colors)
+                                        gray = min(255, 8 + (color_idx - 232) * 10)
+                                        current_bg = f'#{gray:02x}{gray:02x}{gray:02x}'
+                                i += 2  # Skip the 5 and color index
+                            elif 30 <= code_int <= 37:  # foreground colors
                                 color_idx = code_int - 30
                                 if bold:
                                     color_idx += 8  # Use bright version
@@ -338,6 +382,8 @@ def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
                                 current_fg = ansi_colors.get(code_int - 90 + 8, fg_color)
                             elif 100 <= code_int <= 107:  # bright background colors
                                 current_bg = ansi_colors.get(code_int - 100 + 8, bg_color)
+                        i += 1
+                # Ignore other escape sequences (cursor movement, etc.)
             else:
                 # Draw text with current colors
                 if part:
