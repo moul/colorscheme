@@ -119,6 +119,165 @@ def generate_preview(colors, output_file, title="ManfredTouron Color Scheme"):
     img.save(output_file)
     print(f"Generated {output_file}")
 
+def generate_color_table_previews(root_dir):
+    """Generate previews from the contrib color table scripts"""
+    import subprocess
+    import tempfile
+    
+    # Check if PIL is available
+    try:
+        from PIL import Image, ImageFont, ImageDraw
+    except ImportError:
+        print("Skipping color table previews - Pillow not available")
+        return
+    
+    assets_dir = os.path.join(root_dir, 'assets')
+    os.makedirs(assets_dir, exist_ok=True)
+    
+    scripts = [
+        ('16-color-table.sh', 'color-table-16', '16 Color Table'),
+        ('256-color-table.sh', 'color-table-256', '256 Color Table'),
+        ('24-bit-color.sh', 'color-table-24bit', '24-bit Color Test')
+    ]
+    
+    # Generate for both dark and light themes
+    themes = [
+        ('ManfredTouron.xrdb', 'dark'),
+        ('ManfredTouron-Light.xrdb', 'light')
+    ]
+    
+    for script_name, output_base, title in scripts:
+        script_path = os.path.join(root_dir, 'contrib', script_name)
+        if not os.path.exists(script_path):
+            print(f"Script {script_path} not found, skipping")
+            continue
+        
+        for theme_file, theme_name in themes:
+            theme_path = os.path.join(root_dir, theme_file)
+            if not os.path.exists(theme_path):
+                print(f"Theme {theme_path} not found, skipping")
+                continue
+                
+            try:
+                # Apply theme colors to terminal before running script
+                env = os.environ.copy()
+                
+                # Load theme colors
+                theme_colors = parse_xrdb(theme_path)
+                
+                # Set terminal colors using ANSI escape sequences
+                color_setup = ""
+                for i in range(16):
+                    color_key = f'Ansi_{i}_Color'
+                    if color_key in theme_colors:
+                        color = theme_colors[color_key]
+                        # Convert hex to RGB
+                        hex_color = color.lstrip('#')
+                        if len(hex_color) == 6:
+                            r = int(hex_color[0:2], 16)
+                            g = int(hex_color[2:4], 16)
+                            b = int(hex_color[4:6], 16)
+                            # OSC 4 sequence to set palette color
+                            color_setup += f"\033]4;{i};rgb:{r:02x}/{g:02x}/{b:02x}\033\\"
+                
+                # Set background and foreground colors
+                if 'Background_Color' in theme_colors:
+                    bg = theme_colors['Background_Color'].lstrip('#')
+                    if len(bg) == 6:
+                        r = int(bg[0:2], 16)
+                        g = int(bg[2:4], 16) 
+                        b = int(bg[4:6], 16)
+                        color_setup += f"\033]11;rgb:{r:02x}/{g:02x}/{b:02x}\033\\"
+                
+                if 'Foreground_Color' in theme_colors:
+                    fg = theme_colors['Foreground_Color'].lstrip('#')
+                    if len(fg) == 6:
+                        r = int(fg[0:2], 16)
+                        g = int(fg[2:4], 16)
+                        b = int(fg[4:6], 16)
+                        color_setup += f"\033]10;rgb:{r:02x}/{g:02x}/{b:02x}\033\\"
+                
+                # Run the script and capture output
+                script_cmd = f"printf '{color_setup}'; bash {script_path}"
+                result = subprocess.run(script_cmd, 
+                                      capture_output=True, 
+                                      text=True, 
+                                      shell=True,
+                                      timeout=30)
+                
+                if result.returncode == 0:
+                    # Convert ANSI output to image
+                    output_name = f"{output_base}-{theme_name}.png"
+                    output_file = os.path.join(assets_dir, output_name)
+                    theme_title = f"{title} ({theme_name.title()} Theme)"
+                    ansi_to_image(result.stdout, output_file, theme_title, theme_colors)
+                    print(f"Generated {output_file}")
+                else:
+                    print(f"Error running {script_name} with {theme_name}: {result.stderr}")
+                    
+            except subprocess.TimeoutExpired:
+                print(f"Timeout running {script_name} with {theme_name}")
+            except Exception as e:
+                print(f"Error generating preview for {script_name} with {theme_name}: {e}")
+
+def ansi_to_image(ansi_text, output_file, title, theme_colors=None):
+    """Convert ANSI colored text to image"""
+    from PIL import Image, ImageDraw, ImageFont
+    
+    # Parse ANSI codes and create image
+    lines = ansi_text.split('\n')
+    
+    # Image settings
+    font_size = 12
+    line_height = font_size + 4
+    char_width = 8
+    padding = 20
+    
+    # Calculate dimensions
+    max_line_length = max(len(line.encode('utf-8')) for line in lines if line.strip()) if lines else 80
+    width = min(max_line_length * char_width + padding * 2, 1200)
+    height = len(lines) * line_height + padding * 2 + 40  # Extra space for title
+    
+    # Use theme colors if provided
+    bg_color = '#000000'
+    fg_color = '#ffffff'
+    
+    if theme_colors:
+        bg_color = theme_colors.get('Background_Color', '#000000')
+        fg_color = theme_colors.get('Foreground_Color', '#ffffff')
+    
+    # Create image
+    img = Image.new('RGB', (width, height), bg_color)
+    draw = ImageDraw.Draw(img)
+    
+    # Try to use a monospace font
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf", font_size)
+        title_font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16)
+    except:
+        font = ImageFont.load_default()
+        title_font = font
+    
+    # Draw title
+    draw.text((padding, padding), title, fill=fg_color, font=title_font)
+    
+    # Draw text lines (simplified ANSI parsing)
+    y_offset = padding + 30
+    for line in lines:
+        if line.strip():
+            # For now, draw without ANSI parsing - just the raw text
+            clean_line = strip_ansi_codes(line)
+            draw.text((padding, y_offset), clean_line, fill=fg_color, font=font)
+        y_offset += line_height
+    
+    img.save(output_file)
+
+def strip_ansi_codes(text):
+    """Remove ANSI escape codes from text"""
+    import re
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    return ansi_escape.sub('', text)
+
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     root_dir = os.path.dirname(script_dir)
@@ -144,6 +303,9 @@ def main():
         colors = parse_xrdb(light_xrdb)
         output_file = os.path.join(root_dir, 'assets', 'preview-light.png')
         generate_preview(colors, output_file, "ManfredTouron Light Theme")
+    
+    # Generate color table previews using the contrib scripts
+    generate_color_table_previews(root_dir)
 
 if __name__ == '__main__':
     main()
