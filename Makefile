@@ -1,4 +1,11 @@
-.PHONY: build clean screenshot dev help
+.PHONY: help build clean screenshot dev
+
+help:
+	@echo "Commands:"
+	@echo "  make build       - Generate all theme files"
+	@echo "  make screenshot  - Generate preview screenshots"
+	@echo "  make clean       - Clean generated files"
+	@echo "  make dev         - Enter development shell"
 
 build:
 	@nix run . --extra-experimental-features 'nix-command flakes'
@@ -14,10 +21,3 @@ screenshot: build
 
 dev:
 	@nix develop --extra-experimental-features 'nix-command flakes'
-
-help:
-	@echo "Commands:"
-	@echo "  make build       - Generate all theme files"
-	@echo "  make screenshot  - Generate preview screenshots"
-	@echo "  make clean       - Clean generated files"
-	@echo "  make dev         - Enter development shell"
