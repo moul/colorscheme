@@ -1,50 +1,24 @@
 {
     "workbench.colorCustomizations": {
-        "terminal.foreground": "#1a1a1a",
-        "terminal.background": "#fafafa",
-        "terminal.ansiBlack": "#eeeeee",
-        "terminal.ansiBlue": "#2640b3",
-        "terminal.ansiCyan": "#4d8cd9",
-        "terminal.ansiGreen": "#33b30d",
-        "terminal.ansiMagenta": "#a62680",
-        "terminal.ansiRed": "#cc0000",
-        "terminal.ansiWhite": "#4d4d4d",
-        "terminal.ansiYellow": "#b38000",
-        "terminal.ansiBrightBlack": "#b3b3b3",
-        "terminal.ansiBrightBlue": "#4d80cc",
-        "terminal.ansiBrightCyan": "#00a6cc",
-        "terminal.ansiBrightGreen": "#409933",
-        "terminal.ansiBrightMagenta": "#994db3",
-        "terminal.ansiBrightRed": "#e60066",
-        "terminal.ansiBrightWhite": "#333333",
-        "terminal.ansiBrightYellow": "#bfb300",
-        "terminal.selectionBackground": "#d9d9d9",
-        "terminalCursor.foreground": "#1a1a1a"
-    }
-}
-
-{
-    "workbench.colorCustomizations": {
-        "terminal.foreground": "#eeeeee",
-        "terminal.background": "#000000",
         "terminal.ansiBlack": "#222222",
-        "terminal.ansiBlue": "#3950d7",
-        "terminal.ansiCyan": "#66b2ff",
-        "terminal.ansiGreen": "#51ff0f",
-        "terminal.ansiMagenta": "#d336b1",
         "terminal.ansiRed": "#ff0000",
-        "terminal.ansiWhite": "#cecece",
+        "terminal.ansiGreen": "#51ff0f",
         "terminal.ansiYellow": "#e7a800",
+        "terminal.ansiBlue": "#3950d7",
+        "terminal.ansiMagenta": "#d336b1",
+        "terminal.ansiCyan": "#66b2ff",
+        "terminal.ansiWhite": "#cecece",
         "terminal.ansiBrightBlack": "#4e4e4e",
-        "terminal.ansiBrightBlue": "#70a5ed",
-        "terminal.ansiBrightCyan": "#00d4fc",
-        "terminal.ansiBrightGreen": "#62c750",
-        "terminal.ansiBrightMagenta": "#b867e6",
         "terminal.ansiBrightRed": "#ff008b",
-        "terminal.ansiBrightWhite": "#ffffff",
+        "terminal.ansiBrightGreen": "#62c750",
         "terminal.ansiBrightYellow": "#f4ff00",
-        "terminal.selectionBackground": "#000000",
-        "terminalCursor.foreground": "#eeeeee"
+        "terminal.ansiBrightBlue": "#70a5ed",
+        "terminal.ansiBrightMagenta": "#b867e6",
+        "terminal.ansiBrightCyan": "#00d4fc",
+        "terminal.ansiBrightWhite": "#ffffff",
+        "terminal.background": "#000000",
+        "terminal.foreground": "#eeeeee",
+        "terminalCursor.foreground": "#eeeeee",
+        "terminal.selectionBackground": "#000000"
     }
 }
-

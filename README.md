@@ -9,4 +9,25 @@ Personal color scheme for my terminals etc
 
 ## Screenshots
 
-![](./assets/term.jpg)
+### Theme Previews
+
+| Dark Theme | Light Theme |
+|------------|-------------|
+| ![Dark Theme](./assets/preview-dark.png) | ![Light Theme](./assets/preview-light.png) |
+
+### Color Tables
+
+#### 16 Color Table
+| Dark Theme | Light Theme |
+|------------|-------------|
+| ![16 Color Table Dark](./assets/color-table-16-dark.png) | ![16 Color Table Light](./assets/color-table-16-light.png) |
+
+#### 256 Color Table  
+| Dark Theme | Light Theme |
+|------------|-------------|
+| ![256 Color Table Dark](./assets/color-table-256-dark.png) | ![256 Color Table Light](./assets/color-table-256-light.png) |
+
+#### 24-bit Color Test
+| Dark Theme | Light Theme |
+|------------|-------------|
+| ![24-bit Color Test Dark](./assets/color-table-24bit-dark.png) | ![24-bit Color Test Light](./assets/color-table-24bit-light.png) |
