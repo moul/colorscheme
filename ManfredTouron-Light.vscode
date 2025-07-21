@@ -1,24 +1,26 @@
 {
-    "workbench.colorCustomizations": {
-        "terminal.ansiBlack": "#eeeeee",
-        "terminal.ansiRed": "#cc0000",
-        "terminal.ansiGreen": "#33b20c",
-        "terminal.ansiYellow": "#b27f00",
-        "terminal.ansiBlue": "#263fb2",
-        "terminal.ansiMagenta": "#a5267f",
-        "terminal.ansiCyan": "#4c8cd8",
-        "terminal.ansiWhite": "#4c4c4c",
-        "terminal.ansiBrightBlack": "#b2b2b2",
-        "terminal.ansiBrightRed": "#e50066",
-        "terminal.ansiBrightGreen": "#3f9933",
-        "terminal.ansiBrightYellow": "#bfb200",
-        "terminal.ansiBrightBlue": "#4c7fcc",
-        "terminal.ansiBrightMagenta": "#994cb2",
-        "terminal.ansiBrightCyan": "#00a5cc",
-        "terminal.ansiBrightWhite": "#333333",
-        "terminal.background": "#f9f9f9",
-        "terminal.foreground": "#191919",
-        "terminalCursor.foreground": "#191919",
-        "terminal.selectionBackground": "#d8d8d8"
-    }
+  "name": "ManfredTouron light",
+  "type": "light",
+  "colors": {
+    "terminal.background": "#f9f9f9",
+    "terminal.foreground": "#191919",
+    "terminal.ansiBlack": "#eeeeee",
+    "terminal.ansiRed": "#cc0000",
+    "terminal.ansiGreen": "#33b20c",
+    "terminal.ansiYellow": "#b27f00",
+    "terminal.ansiBlue": "#263fb2",
+    "terminal.ansiMagenta": "#a5267f",
+    "terminal.ansiCyan": "#4c8cd8",
+    "terminal.ansiWhite": "#4c4c4c",
+    "terminal.ansiBrightBlack": "#b2b2b2",
+    "terminal.ansiBrightRed": "#e50066",
+    "terminal.ansiBrightGreen": "#3f9933",
+    "terminal.ansiBrightYellow": "#bfb200",
+    "terminal.ansiBrightBlue": "#4c7fcc",
+    "terminal.ansiBrightMagenta": "#994cb2",
+    "terminal.ansiBrightCyan": "#00a5cc",
+    "terminal.ansiBrightWhite": "#333333",
+    "terminalCursor.background": "#f9f9f9",
+    "terminalCursor.foreground": "#191919"
+  }
 }

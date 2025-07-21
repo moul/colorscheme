@@ -1,21 +1,43 @@
-color0 #eeeeee
-color1 #cc0000
-color2 #33b20c
-color3 #b27f00
-color4 #263fb2
-color5 #a5267f
-color6 #4c8cd8
-color7 #4c4c4c
-color8 #b2b2b2
-color9 #e50066
-color10 #3f9933
-color11 #bfb200
-color12 #4c7fcc
-color13 #994cb2
-color14 #00a5cc
-color15 #333333
-background #f9f9f9
+# ManfredTouron light theme for Kitty
+
+# Basic colors
 foreground #191919
-cursor #191919
+background #f9f9f9
+selection_foreground #f9f9f9
 selection_background #d8d8d8
-selection_foreground #191919
+
+# Cursor colors
+cursor #191919
+cursor_text_color #f9f9f9
+
+# Black
+color0 #eeeeee
+color8 #b2b2b2
+
+# Red
+color1 #cc0000
+color9 #e50066
+
+# Green
+color2 #33b20c
+color10 #3f9933
+
+# Yellow
+color3 #b27f00
+color11 #bfb200
+
+# Blue
+color4 #263fb2
+color12 #4c7fcc
+
+# Magenta
+color5 #a5267f
+color13 #994cb2
+
+# Cyan
+color6 #4c8cd8
+color14 #00a5cc
+
+# White
+color7 #4c4c4c
+color15 #333333
